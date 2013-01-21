@@ -34,7 +34,7 @@ public class MessageReceive implements Runnable{
             try {
                 socket.receive(dp);
                 String data = new String(buffer, 0, dp.getLength());
-                System.out.println("Received: "+data);
+//                System.out.println("Received: "+data);
                 comm.parseMessage(data);
             } catch (IOException ex) {
                 Logger.getLogger(MessageReceive.class.getName()).log(Level.SEVERE, null, ex);

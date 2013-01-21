@@ -6,6 +6,8 @@ package ui;
 
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
+import utils.Configuarator;
+import utils.Constants;
 
 /**
  *
@@ -14,17 +16,36 @@ import javax.swing.DefaultComboBoxModel;
 public class LoginDialog extends javax.swing.JFrame {
 
     ClientJFrame cf;
+    Configuarator conf;
+    Constants constant;
 
     /**
      * Creates new form LoginDialog
      */
     public LoginDialog() {
         initComponents();
+        loadConf();
         cbCliendId.setModel(new DefaultComboBoxModel(new Object[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
         this.setSize(460, 220);
         int w = (Toolkit.getDefaultToolkit().getScreenSize().width - 460) / 2;
         int h = (Toolkit.getDefaultToolkit().getScreenSize().height - 220) / 2;
         this.setLocation(w, h);
+    }
+
+    private void loadConf() {
+        conf = new Configuarator();
+        constant = new Constants();
+        constant.setId(conf.getId());
+        constant.setRemoteIP(conf.getRemoteIP());
+        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
+        constant.setRemoteMessagePort(Integer.parseInt(conf.getRemoteMessagePort()));
+        constant.setBizBoardPort(Integer.parseInt(conf.getBusinessBoardPort()));
+        constant.setBizBoardIP(conf.getBusinessBoardIP());
+//        System.out.println(constant.getRemoteIP());
+//        System.out.println(constant.getRemoteLoginPort());
+//        System.out.println(constant.getRemoteMessagePort());
+//        System.out.println(constant.getBizBoardIP());
+//        System.out.println(constant.getBizBoardPort());
     }
 
     /**
@@ -134,8 +155,9 @@ public class LoginDialog extends javax.swing.JFrame {
 
         String ip = this.tfAddr.getText();
         String id = this.cbCliendId.getSelectedItem().toString();
+        constant.setId(id);
 
-        cf = new ClientJFrame(ip, id);
+//        cf = new ClientJFrame(constant);
         cf.setSize(1280, 800);
         int w = (Toolkit.getDefaultToolkit().getScreenSize().width - 1280) / 2;
         int h = (Toolkit.getDefaultToolkit().getScreenSize().height - 800) / 2;

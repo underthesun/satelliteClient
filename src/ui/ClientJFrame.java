@@ -12,16 +12,14 @@ package ui;
 
 import communication.Communication;
 import java.awt.Color;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import utils.Business;
 import utils.BusinessStatusTableModel;
+import utils.Configuarator;
+import utils.Constants;
 
 /**
  *
@@ -29,37 +27,51 @@ import utils.BusinessStatusTableModel;
  */
 public class ClientJFrame extends javax.swing.JFrame {
 
-    private String serverIp;
-    private String clientId;
+    Configuarator conf;
+    Constants constant;
     private BusinessStatusTableModel bstm;
-//    private static int serverLoginPort = 6666;
-//    private static int serverMessagePort = 6667;
-    private static int privilege;
     private Communication comm;
 
     /**
      * Creates new form ClientJFrame
      */
-    public ClientJFrame(String ip, String id) {
+    public ClientJFrame() {
         initComponents();
-        serverIp = ip;
-        System.out.println("server ip: " + serverIp);
-        try {
-            System.out.println("server addr: " + InetAddress.getByName(serverIp));
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(ClientJFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        clientId = id;
-        Random rdm = new Random();
-        privilege = rdm.nextInt(10);
+        loadConf();
 
         bstm = new BusinessStatusTableModel();
         busiTable.setModel(bstm);
         setRemoteStationID();
         setMODEMnumber();
         setVideo();
-
         comm = new Communication(this);
+
+        this.setSize(1280, 800);
+        int w = (Toolkit.getDefaultToolkit().getScreenSize().width - 1280) / 2;
+        int h = (Toolkit.getDefaultToolkit().getScreenSize().height - 800) / 2;
+        this.setLocation(w, h);
+        this.setTitle("[站点" + constant.getId() + "]");
+    }
+
+    private void loadConf() {
+        conf = new Configuarator();
+        constant = new Constants();
+        constant.setId(conf.getId());
+        constant.setRemoteIP(conf.getRemoteIP());
+        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
+        constant.setRemoteMessagePort(Integer.parseInt(conf.getRemoteMessagePort()));
+        constant.setBizBoardPort(Integer.parseInt(conf.getBusinessBoardPort()));
+        constant.setBizBoardIP(conf.getBusinessBoardIP());
+        constant.setBdFax(Integer.parseInt(conf.getBdFax()));
+        constant.setBdVideoHD(Integer.parseInt(conf.getBdVideoHD()));
+        constant.setBdVideoNormal(Integer.parseInt(conf.getBdVideoNormal()));
+        constant.setBdVoIP(Integer.parseInt(conf.getBdVoIP()));
+        constant.setSiteNum(Integer.parseInt(conf.getSiteNum()));
+//        System.out.println(constant.getRemoteIP());
+//        System.out.println(constant.getRemoteLoginPort());
+//        System.out.println(constant.getRemoteMessagePort());
+//        System.out.println(constant.getBizBoardIP());
+//        System.out.println(constant.getBizBoardPort());
     }
 
     /**
@@ -97,6 +109,10 @@ public class ClientJFrame extends javax.swing.JFrame {
         cbVideo = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         tfVoipNum = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        tfAntennaCaliber = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        tfAmplifier = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -172,147 +188,130 @@ public class ClientJFrame extends javax.swing.JFrame {
         busi_application.setLayout(new java.awt.BorderLayout(0, 10));
 
         tfBandWidth.setText("512");
-        tfBandWidth.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfBandWidthActionPerformed(evt);
-            }
-        });
 
         jLabel5.setText("VoIP电话路数：");
 
         jLabel6.setText("视频服务质量：");
 
         tfFaxNum.setText("2");
-        tfFaxNum.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfFaxNumActionPerformed(evt);
-            }
-        });
 
         cbRemoteId.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbRemoteId.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbRemoteIdItemStateChanged(evt);
-            }
-        });
-        cbRemoteId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbRemoteIdActionPerformed(evt);
-            }
-        });
 
-        jLabel9.setText("带宽：");
+        jLabel9.setText("互联网带宽：");
 
         jLabel8.setText("传真路数：");
 
         cbModemType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbModemType.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbModemTypeItemStateChanged(evt);
-            }
-        });
-        cbModemType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbModemTypeActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("调制解调器：");
 
         jLabel10.setText("kbps");
 
         cbVideo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbVideo.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbVideoItemStateChanged(evt);
-            }
-        });
-        cbVideo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbVideoActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("远端站号：");
 
         tfVoipNum.setText("2");
-        tfVoipNum.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfVoipNumActionPerformed(evt);
-            }
-        });
+
+        jLabel15.setText("天线口径：");
+
+        tfAntennaCaliber.setText("2");
+
+        jLabel16.setText("功放大小：");
+
+        tfAmplifier.setText("2");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 704, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(20, 20, 20)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2))
-                            .addGap(30, 30, 30)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cbModemType, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cbRemoteId, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel9))
-                            .addGap(18, 18, 18)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                    .addComponent(tfBandWidth)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel10))
-                                .addComponent(cbVideo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(jLabel8)
+                            .addComponent(jLabel1)
+                            .addGap(42, 42, 42)
+                            .addComponent(cbRemoteId, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tfFaxNum, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(18, 18, 18)
-                                .addComponent(tfVoipNum, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addContainerGap(480, Short.MAX_VALUE)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(30, 30, 30)
+                                .addComponent(cbModemType, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(jLabel15)
+                                    .addGap(42, 42, 42)
+                                    .addComponent(tfAntennaCaliber, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(jLabel16)
+                                        .addGap(42, 42, 42)
+                                        .addComponent(tfAmplifier, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(tfVoipNum, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(jLabel9)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(tfBandWidth)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10))
+                            .addComponent(tfFaxNum, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbVideo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(476, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 423, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(32, 32, 32)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(cbRemoteId))
-                    .addGap(34, 34, 34)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(cbModemType))
-                    .addGap(46, 46, 46)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tfVoipNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(35, 35, 35)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tfFaxNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(38, 38, 38)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tfBandWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGap(29, 29, 29)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cbVideo))
-                    .addGap(32, 32, 32)))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(cbRemoteId))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(cbModemType))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfAntennaCaliber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfAmplifier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfVoipNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfFaxNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfBandWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbVideo))
+                .addGap(99, 99, 99))
         );
 
-        busi_application.add(jPanel4, java.awt.BorderLayout.CENTER);
+        busi_application.add(jPanel4, java.awt.BorderLayout.LINE_START);
 
         jPanel5.setLayout(new java.awt.GridLayout(1, 0));
         jPanel5.add(jLabel7);
@@ -382,47 +381,51 @@ public class ClientJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfVoipNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfVoipNumActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfVoipNumActionPerformed
-//获取鼠标点击的选项。
-    private void cbRemoteIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRemoteIdActionPerformed
-        // TODO add your handling code here:
-//        if (this.remote_station_serial.getSelectedItem().equals(this.stationID)) {
-//            //new JTextField(new String("不能和自己建立连接"));
-//            this.busi_application.show();
-//        }
-        //this.appli_content += this.remote_station_serial.getSelectedItem();
-    }//GEN-LAST:event_cbRemoteIdActionPerformed
-
-    private void cbRemoteIdItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbRemoteIdItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbRemoteIdItemStateChanged
-
     private void busi_submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busi_submitActionPerformed
         // TODO add your handling code here:
-        Random rdm = new Random();
+//        Random rdm = new Random();
         Business bz = new Business();
         bz.setStationID(this.cbRemoteId.getSelectedItem().toString());
-        bz.setBandwidth(tfBandWidth.getText());
-        bz.setSigNoiseRatio1(10 + rdm.nextInt(100) + "dB");
-        bz.setSignoiseRatio2(10 + rdm.nextInt(100) + "dB");
+        bz.setSigNoiseRatio1("" + constant.getSigNoiseLocal());
+        bz.setSignoiseRatio2("" + constant.getSigNoiseRemote());
         bz.setRuningStatus("入网");
-        bz.setVoIPNum(tfVoipNum.getText());
 
-        String videoChecked = cbVideo.getSelectedItem().toString();
-        bz.setVideoBusi(videoChecked);
-        bz.setFaxNum(tfFaxNum.getText());
-        bz.setInterBandwidth(1 + rdm.nextInt(3) + "MB/s");
+        int voipNum = Integer.parseInt(tfVoipNum.getText());
+        bz.setVoIPNum("" + voipNum);
+        int voipBd = voipNum * constant.getBdVoIP();
+
+        String videoSelected = cbVideo.getSelectedItem().toString();
+        bz.setVideoBusi(videoSelected);
+        int videoBd = 0;
+        if (videoSelected.equals("0")) {
+            videoBd = 0;
+        } else if (videoSelected.equals("标清")) {
+            videoBd = constant.getBdVideoNormal();
+        } else if (videoSelected.equals("高清")) {
+            videoBd = constant.getBdVideoHD();
+        }
+
+        int faxNum = Integer.parseInt(tfFaxNum.getText());
+        bz.setFaxNum("" + faxNum);
+        int faxBd = faxNum * constant.getBdFax();
+
+        int internetBd = Integer.parseInt(tfBandWidth.getText());
+        bz.setInterBandwidth(internetBd + "kbps");
+
+        int bandWidth = voipBd + videoBd + faxBd + internetBd;
+        bz.setBandwidth(bandWidth + "kbps");
+
+        bz.setAntennaCaliber(tfAntennaCaliber.getText());
+        bz.setAmplifier(tfAmplifier.getText());
         bz.setFreshTime((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
         bz.setAppStatus("正在申请");
-
         bstm.addRecord(bz);
+
         String request = "request:";
         String idCalled = cbRemoteId.getSelectedItem().toString();
-        String biz = "话音" + tfVoipNum.getText() + "路" + "&" + "视频" + cbVideo.getSelectedItem().toString();
-        String bd = "" + Integer.parseInt(tfBandWidth.getText()) / 8 + "kHz";
-        request += clientId + ":" + idCalled + ":" + biz + ":" + privilege + ":" + bd + ":" + bz.getSerial();
+        String biz = "话音" + tfVoipNum.getText() + "路&视频" + cbVideo.getSelectedItem().toString();
+//        String bd = tfBandWidth.getText();
+        request += constant.getId() + ":" + idCalled + ":" + biz + ":" + bandWidth + ":" + bz.getSerial();
 //        System.out.println("query: " + request);
 //        System.out.println(cbVideo.getSelectedItem().toString());
         comm.sendRequest(request);
@@ -435,7 +438,7 @@ public class ClientJFrame extends javax.swing.JFrame {
         if (!str.equals("")) {
             String message = "message:";
             msg_record.append("[本机]:" + str + "\n");
-            message += clientId + ":" + str;
+            message += constant.getId() + ":" + str;
             comm.sendMessage(message);
             this.msg_input.setText("");
         }
@@ -447,41 +450,39 @@ public class ClientJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.msg_input.setText("");
     }//GEN-LAST:event_msg_clearActionPerformed
-
-    private void tfFaxNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFaxNumActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfFaxNumActionPerformed
-
-    private void tfBandWidthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfBandWidthActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfBandWidthActionPerformed
-
-    private void cbModemTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbModemTypeItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbModemTypeItemStateChanged
-
-    private void cbModemTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbModemTypeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbModemTypeActionPerformed
-
-    private void cbVideoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbVideoItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbVideoItemStateChanged
-
-    private void cbVideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVideoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbVideoActionPerformed
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new ClientJFrame().setVisible(true);
-//            }
-//        });
-//
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(LoginDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(LoginDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(LoginDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(LoginDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ClientJFrame().setVisible(true);
+            }
+        });
+
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable busiTable;
     private javax.swing.JPanel busi_application;
@@ -496,6 +497,8 @@ public class ClientJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -520,13 +523,20 @@ public class ClientJFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea msg_input;
     private javax.swing.JTextArea msg_record;
     private javax.swing.JButton msg_send;
+    private javax.swing.JTextField tfAmplifier;
+    private javax.swing.JTextField tfAntennaCaliber;
     private javax.swing.JTextField tfBandWidth;
     private javax.swing.JTextField tfFaxNum;
     private javax.swing.JTextField tfVoipNum;
     // End of variables declaration//GEN-END:variables
 
     private void setRemoteStationID() {
-        String item[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+//        String item[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        int siteNum = constant.getSiteNum();
+        String item[] = new String[siteNum];
+        for (int i = 0; i < siteNum; i++) {
+            item[i] = "" + (i + 1);
+        }
         this.cbRemoteId.setMaximumRowCount(6);
         this.cbRemoteId.setModel(new javax.swing.DefaultComboBoxModel(item));
     }
@@ -538,28 +548,23 @@ public class ClientJFrame extends javax.swing.JFrame {
     }
 
     private void setVideo() {
-        String item[] = {"普清", "标清", "高清"};
+        String item[] = {"0", "标清", "高清"};
         this.cbVideo.setModel(new DefaultComboBoxModel(item));
     }
 
-    public String getServerIp() {
-        return serverIp;
+    public Constants getConstants() {
+        return constant;
     }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public int getPrivilege() {
-        return privilege;
-    }
+//    public int getPrivilege() {
+//        return privilege;
+//    }
 
     public void connected() {
         msg_send.setEnabled(true);
         msg_input.setEditable(true);
         msg_clear.setEnabled(true);
         busi_submit.setEnabled(true);
-        link_log.append((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date())+"与服务器连接成功"+"\n");
+        link_log.append((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) + "与服务器连接成功" + "\n");
         lbConnectStatus.setText("连接状态：已连接");
         lbConnectStatus.setForeground(Color.green);
     }
@@ -569,7 +574,7 @@ public class ClientJFrame extends javax.swing.JFrame {
         msg_input.setEditable(false);
         msg_clear.setEnabled(false);
         busi_submit.setEnabled(false);
-        link_log.append((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date())+"与服务器断开连接"+"\n");
+        link_log.append((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) + "与服务器断开连接" + "\n");
         lbConnectStatus.setText("连接状态：未连接");
         lbConnectStatus.setForeground(Color.red);
     }
@@ -577,14 +582,39 @@ public class ClientJFrame extends javax.swing.JFrame {
     public void appendMessage(String str) {
         msg_record.append("[服务器]: " + str + "\n");
     }
-    
-    public void processBizEcho(String type, String serial){
-        int t = Integer.parseInt(type);
-        int s = Integer.parseInt(serial);
+
+//    public void processBizEcho(String type, String serial) {
+//        int t = Integer.parseInt(type);
+//        int s = Integer.parseInt(serial);
+//        String status = null;
+//        switch (t) {
+//            case 0:
+//                status = "已批准";
+//                break;
+//            case 1:
+//                status = "已驳回";
+//                break;
+//            case 2:
+//                status = "已警告";
+//                break;
+//            case 3:
+//                status = "已拆除";
+//                break;
+//        }
+//        bstm.setRunningStatus(s, status);
+//    }
+     public void processBizEcho(String s) {
+         String[] strs = s.split(":");
+        int type = Integer.parseInt(strs[0]);
+        int serial = Integer.parseInt(strs[1]);
         String status = null;
-        switch(t){
+        switch (type) {
             case 0:
                 status = "已批准";
+                String fp = strs[2];
+                String cf = "F7:03:"+fp+":"+bstm.getBandwidth(serial)+":"+"35"+":"+"00";
+                System.out.println(cf);
+                comm.sendBizBoardQuery(cf);
                 break;
             case 1:
                 status = "已驳回";
@@ -596,6 +626,10 @@ public class ClientJFrame extends javax.swing.JFrame {
                 status = "已拆除";
                 break;
         }
-        bstm.setRunningStatus(s, status);
+        bstm.setRunningStatus(serial, status);
     }
+     
+     public void updateSNR(int snr){
+         bstm.updateSNR(snr);
+     }
 }

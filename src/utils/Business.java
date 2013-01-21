@@ -24,9 +24,10 @@ public class Business {
     private String busi_app_stutas;//业务申请状况
     private static int count;//请求编号
     private int serial;
-    private static int privilege;
+    private String antennaCaliber;
+    private String amplifier;
 
-    public Business(String rid, String bw, String snr1, String snr2, String rs, String voipn, String vb, String fn, String ib, String ft, String bs) {
+    public Business(String rid, String bw, String snr1, String snr2, String rs, String voipn, String vb, String fn, String ib, String ac, String amp, String ft, String bs) {
         this.remote_stationID = rid;
         this.bandwidth = bw;
         this.signal_noise_ratio1 = snr1;
@@ -36,6 +37,8 @@ public class Business {
         this.video_business = vb;
         this.fax_num = fn;
         this.internet_bandwith = ib;
+        this.antennaCaliber = ac;
+        this.amplifier = amp;
         this.fresh_time = ft;
         this.busi_app_stutas = bs;
         this.serial = count++;
@@ -140,5 +143,21 @@ public class Business {
 
     public String getAppStatus() {
         return this.busi_app_stutas;
+    }
+    
+    public String getAntennaCaliber(){
+        return this.antennaCaliber;
+    }
+    
+    public String getAmplifier(){
+        return this.amplifier;
+    }
+    
+    public void setAntennaCaliber(String ac){
+        this.antennaCaliber = ac;
+    }
+    
+    public void setAmplifier(String amp){
+        this.amplifier = amp;
     }
 }
