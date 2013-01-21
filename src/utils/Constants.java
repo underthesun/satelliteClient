@@ -16,6 +16,15 @@ public class Constants {
     private static int bdVideoHD;
     private static String id;
     private static String remoteIP;
+    private static int remotePort;
+
+    public static int getRemotePort() {
+        return remotePort;
+    }
+
+    public static void setRemotePort(int remotePort) {
+        Constants.remotePort = remotePort;
+    }
     private static int remoteLoginPort;
     private static int remoteMessagePort;
     private static int localPort;

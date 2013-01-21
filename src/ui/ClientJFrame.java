@@ -58,8 +58,9 @@ public class ClientJFrame extends javax.swing.JFrame {
         constant = new Constants();
         constant.setId(conf.getId());
         constant.setRemoteIP(conf.getRemoteIP());
-        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
-        constant.setRemoteMessagePort(Integer.parseInt(conf.getRemoteMessagePort()));
+        constant.setRemotePort(Integer.parseInt(conf.getRemotePort()));
+//        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
+//        constant.setRemoteMessagePort(Integer.parseInt(conf.getRemoteMessagePort()));
         constant.setBizBoardPort(Integer.parseInt(conf.getBusinessBoardPort()));
         constant.setBizBoardIP(conf.getBusinessBoardIP());
         constant.setBdFax(Integer.parseInt(conf.getBdFax()));

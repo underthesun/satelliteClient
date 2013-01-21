@@ -24,6 +24,7 @@ public class Communication {
     private Constants constant;
     private boolean isConnected = false;
     private static String serverIp;
+    private static int serverPort;
     private static int serverLoginPort;
     private static int serverMessagePort;
     private static String bizBoardIP;
@@ -63,6 +64,7 @@ public class Communication {
     private void loadConstants() {
         constant = clientFrame.getConstants();
         serverIp = constant.getRemoteIP();
+        serverPort = constant.getRemotePort();
         clientId = constant.getId();
         serverLoginPort = constant.getRemoteLoginPort();
         serverMessagePort = constant.getRemoteMessagePort();
@@ -82,19 +84,19 @@ public class Communication {
 
     public void connectServer() {
         String data = "connect:" + clientId;
-        sendPacket(data, serverIp, serverLoginPort);
+        sendPacket(data, serverIp, serverPort);
     }
 
     public void sendKeep(String str) {
-        sendPacket(str, serverIp, serverLoginPort);
+        sendPacket(str, serverIp, serverPort);
     }
 
     public void sendRequest(String str) {
-        sendPacket(str, serverIp, serverMessagePort);
+        sendPacket(str, serverIp, serverPort);
     }
 
     public void sendMessage(String str) {
-        sendPacket(str, serverIp, serverMessagePort);
+        sendPacket(str, serverIp, serverPort);
     }
 
     public void sendBizBoardQuery(String str) {

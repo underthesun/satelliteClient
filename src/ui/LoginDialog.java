@@ -37,8 +37,8 @@ public class LoginDialog extends javax.swing.JFrame {
         constant = new Constants();
         constant.setId(conf.getId());
         constant.setRemoteIP(conf.getRemoteIP());
-        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
-        constant.setRemoteMessagePort(Integer.parseInt(conf.getRemoteMessagePort()));
+//        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
+//        constant.setRemoteMessagePort(Integer.parseInt(conf.getRemoteMessagePort()));
         constant.setBizBoardPort(Integer.parseInt(conf.getBusinessBoardPort()));
         constant.setBizBoardIP(conf.getBusinessBoardIP());
 //        System.out.println(constant.getRemoteIP());

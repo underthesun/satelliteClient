@@ -55,15 +55,20 @@ public class Configuarator {
         return nl.item(0).getFirstChild().getNodeValue();
     }
 
-    public String getRemoteLoginPort() {
-        NodeList nl = doc.getElementsByTagName("remoteLoginPort");
+    public String getRemotePort() {
+        NodeList nl = doc.getElementsByTagName("remotePort");
         return nl.item(0).getFirstChild().getNodeValue();
     }
-
-    public String getRemoteMessagePort() {
-        NodeList nl = doc.getElementsByTagName("remoteMessagePort");
-        return nl.item(0).getFirstChild().getNodeValue();
-    }
+//
+//    public String getRemoteLoginPort() {
+//        NodeList nl = doc.getElementsByTagName("remoteLoginPort");
+//        return nl.item(0).getFirstChild().getNodeValue();
+//    }
+//
+//    public String getRemoteMessagePort() {
+//        NodeList nl = doc.getElementsByTagName("remoteMessagePort");
+//        return nl.item(0).getFirstChild().getNodeValue();
+//    }
 
     public String getLocalPort() {
         NodeList nl = doc.getElementsByTagName("localPort");
@@ -104,7 +109,6 @@ public class Configuarator {
         NodeList nl = doc.getElementsByTagName("siteNum");
         return nl.item(0).getFirstChild().getNodeValue();
     }
-
 //    public void getEmployee(){
 //        NodeList nl = doc.getElementsByTagName("employee");
 //        int length = nl.getLength();
