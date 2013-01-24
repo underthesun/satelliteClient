@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 public class BusinessStatusTableModel extends AbstractTableModel {
 
     public ArrayList<Business> busilist;
-    private String columnNames[] = {"远程站点", "带宽", "信道1", "信道2", "入网状况", "VoIP路数", "视频业务", "传真路数", "互联网带宽", "天线口径", "功放大小", "更新时间", "运行状况"};
+    private String columnNames[] = {"主叫", "被叫", "带宽", "信道1", "信道2", "入网状况", "VoIP路数", "视频业务", "传真路数", "互联网带宽", "天线口径", "功放大小", "更新时间", "运行状况"};
 
     public BusinessStatusTableModel() {
         busilist = new ArrayList<Business>();
@@ -30,13 +30,13 @@ public class BusinessStatusTableModel extends AbstractTableModel {
 
     public String getBandwidth(int serial) {
         Pattern p = Pattern.compile("[^0-9]");
-        String bd="";
+        String bd = "";
         for (Business b : busilist) {
             if (b.getSerial() == serial) {
                 bd = b.getBandwidth();
             }
         }
-        
+
         Matcher m = p.matcher(bd);
         String result = m.replaceAll("");
         return result;
@@ -52,7 +52,7 @@ public class BusinessStatusTableModel extends AbstractTableModel {
     }
 
     private void loadTestData() {
-        busilist.add(new Business("1", "512", "xxdb", "xxdb", "入网", "2", "视频业务", "2", "2m", "2", "2", "sss", "dsd"));
+        busilist.add(new Business("2", "1", "512", "xxdb", "xxdb", "入网", "2", "视频业务", "2", "2m", "2", "2", "sss", "dsd"));
     }
 
     // public ArraryList<BusiQueue> getBusiList(){
@@ -72,45 +72,56 @@ public class BusinessStatusTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object list = null;
+        Business biz = busilist.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                list = busilist.get(rowIndex).getStationID();
+                list = biz.getStationIDCalling();
                 break;
             case 1:
-                list = busilist.get(rowIndex).getBandwidth();
+                list = biz.getStationIDCalled();
                 break;
             case 2:
-                list = busilist.get(rowIndex).getSigNoiseRatio1();
+                list = biz.getBandwidth();
                 break;
             case 3:
-                list = busilist.get(rowIndex).getSignoiseRatio2();
+                list = biz.getSigNoiseRatio1();
                 break;
             case 4:
-                list = busilist.get(rowIndex).getRuningStatus();
+                list = biz.getSignoiseRatio2();
                 break;
             case 5:
-                list = busilist.get(rowIndex).getVoIPNum();
+                list = biz.getRuningStatus();
                 break;
             case 6:
-                list = busilist.get(rowIndex).getVideoBusi();
+                list = biz.getVoIPNum();
                 break;
             case 7:
-                list = busilist.get(rowIndex).getFaxNum();
+                String s = biz.getVideoBusi();
+                if (s.equals("0")) {
+                    list = "0";
+                } else if (s.equals("1")) {
+                    list = "标清";
+                } else if (s.equals("2")) {
+                    list = "高清";
+                }
                 break;
             case 8:
-                list = busilist.get(rowIndex).getInterBandwidth();
+                list = biz.getFaxNum();
                 break;
             case 9:
-                list = busilist.get(rowIndex).getAntennaCaliber();
+                list = biz.getInterBandwidth();
                 break;
             case 10:
-                list = busilist.get(rowIndex).getAmplifier();
+                list = biz.getAntennaCaliber();
                 break;
             case 11:
-                list = busilist.get(rowIndex).getFreshTime();
+                list = biz.getAmplifier();
                 break;
             case 12:
-                list = busilist.get(rowIndex).getAppStatus();
+                list = biz.getFreshTime();
+                break;
+            case 13:
+                list = biz.getAppStatus();
                 break;
         }
         return list;
@@ -126,11 +137,30 @@ public class BusinessStatusTableModel extends AbstractTableModel {
     public void statusChanged() {
         this.fireTableStructureChanged();
     }
-    
-    public void updateSNR(int snr){
-        for(Business b:busilist){
-            b.setSigNoiseRatio1(""+snr);
+
+    public void updateSNR(String snr) {
+        for (Business b : busilist) {
+            b.setSigNoiseRatio1(snr);
         }
         fireTableDataChanged();
+    }
+
+    public void updateSNR(String site, String snr2) {
+        for (Business b : busilist) {
+            if (b.getStationIDCalled().equals(site) && b.getAppStatus().equals("已批准")) {
+                b.setSignoiseRatio2(snr2);
+            }
+        }
+        fireTableDataChanged();
+    }
+
+    public ArrayList<String> getPermitted() {
+        ArrayList<String> plist = new ArrayList<String>();
+        for (Business b : busilist) {
+            if (b.getAppStatus().equals("已批准")) {
+                plist.add(b.getStationIDCalled());
+            }
+        }
+        return plist;
     }
 }

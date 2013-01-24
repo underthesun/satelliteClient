@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,7 +59,7 @@ public class Communication {
         Timer t = new Timer();
         t.schedule(keepConnection, 0, 3000);
         t.schedule(bizBoardQuery, 0, 2000);
-        new Thread(new MessageReceive(clientSocket, this)).start();
+        new Thread(new MessageServer(clientSocket, this)).start();
     }
 
     private void loadConstants() {
@@ -98,11 +99,17 @@ public class Communication {
     public void sendMessage(String str) {
         sendPacket(str, serverIp, serverPort);
     }
+    
+    public ArrayList<String> getPermittedSites(){
+        return null;
+    }
 
     public void sendBizBoardQuery(String str) {
 //        System.out.println("Biz:"+str);
         sendPacket(str, bizBoardIP, bizBoardPort);
     }
+    
+    public void sendSNRQuery(String snr){}
 
     public void sendPacket(String str, String ip, int port) {
         byte[] data = str.getBytes();

@@ -386,7 +386,7 @@ public class ClientJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
 //        Random rdm = new Random();
         Business bz = new Business();
-        bz.setStationID(this.cbRemoteId.getSelectedItem().toString());
+        bz.setStationIDCalled(this.cbRemoteId.getSelectedItem().toString());
         bz.setSigNoiseRatio1("" + constant.getSigNoiseLocal());
         bz.setSignoiseRatio2("" + constant.getSigNoiseRemote());
         bz.setRuningStatus("入网");
@@ -631,6 +631,6 @@ public class ClientJFrame extends javax.swing.JFrame {
     }
      
      public void updateSNR(int snr){
-         bstm.updateSNR(snr);
+         bstm.updateSNR(""+snr);
      }
 }

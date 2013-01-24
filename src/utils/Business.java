@@ -10,8 +10,9 @@ package utils;
  */
 //构造一个队列，存放业务状况
 public class Business {
-
-    private String remote_stationID;//远端站点
+    private Boolean isPermitted;
+    private String remote_stationID_called;//远端被叫
+    private String remote_stationID_calling;//远端主叫
     private String bandwidth;//带宽，单位kbps
     private String signal_noise_ratio1;//信道1信噪比，单位db
     private String signal_noise_ratio2;//信道2信噪比，单位db
@@ -27,8 +28,9 @@ public class Business {
     private String antennaCaliber;
     private String amplifier;
 
-    public Business(String rid, String bw, String snr1, String snr2, String rs, String voipn, String vb, String fn, String ib, String ac, String amp, String ft, String bs) {
-        this.remote_stationID = rid;
+    public Business(String rid1,String rid2, String bw, String snr1, String snr2, String rs, String voipn, String vb, String fn, String ib, String ac, String amp, String ft, String bs) {
+        this.remote_stationID_calling = rid1;
+        this.remote_stationID_called = rid2;
         this.bandwidth = bw;
         this.signal_noise_ratio1 = snr1;
         this.signal_noise_ratio2 = snr2;
@@ -42,11 +44,20 @@ public class Business {
         this.fresh_time = ft;
         this.busi_app_stutas = bs;
         this.serial = count++;
-
+        this.isPermitted = null;
     }
 
     public Business() {
         this.serial = count++;
+        this.isPermitted = null;
+    }
+
+    public Boolean getIsPermitted() {
+        return isPermitted;
+    }
+
+    public void setIsPermitted(Boolean isPermitted) {
+        this.isPermitted = isPermitted;
     }
 
     public void setSerial(int s) {
@@ -57,8 +68,8 @@ public class Business {
         return serial;
     }
 
-    public void setStationID(String sid) {
-        this.remote_stationID = sid;
+    public void setStationIDCalled(String sid) {
+        this.remote_stationID_called = sid;
     }
 
     public void setBandwidth(String bandwidth) {
@@ -101,8 +112,8 @@ public class Business {
         this.busi_app_stutas = status;
     }
 
-    public String getStationID() {
-        return this.remote_stationID;
+    public String getStationIDCalled() {
+        return this.remote_stationID_called;
     }
 
     public String getBandwidth() {
@@ -159,5 +170,13 @@ public class Business {
     
     public void setAmplifier(String amp){
         this.amplifier = amp;
+    }
+    
+    public void setStationIDCalling(String id){
+        this.remote_stationID_calling = id;
+    }
+    
+    public String getStationIDCalling(){
+        return this.remote_stationID_calling;
     }
 }
