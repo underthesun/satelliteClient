@@ -5,6 +5,8 @@
  */
 package communication;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -112,8 +114,13 @@ public class Communication {
     public void sendSNRQuery(String snr){}
 
     public void sendPacket(String str, String ip, int port) {
-        byte[] data = str.getBytes();
+//        byte[] data = str.getBytes();
         try {
+            ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+            DataOutputStream dataStream = new DataOutputStream(ostream);
+            dataStream.writeUTF(str);
+            dataStream.close();
+            byte[] data = ostream.toByteArray();
             DatagramPacket dp = new DatagramPacket(data, data.length, InetAddress.getByName(ip), port);
             clientSocket.send(dp);
         } catch (IOException ex) {

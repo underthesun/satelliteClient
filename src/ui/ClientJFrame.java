@@ -57,6 +57,7 @@ public class ClientJFrame extends javax.swing.JFrame {
         conf = new Configuarator();
         constant = new Constants();
         constant.setId(conf.getId());
+        constant.setLocalPort(Integer.parseInt(conf.getLocalPort()));
         constant.setRemoteIP(conf.getRemoteIP());
         constant.setRemotePort(Integer.parseInt(conf.getRemotePort()));
 //        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
@@ -386,6 +387,7 @@ public class ClientJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
 //        Random rdm = new Random();
         Business bz = new Business();
+        bz.setStationIDCalling(constant.getId());
         bz.setStationIDCalled(this.cbRemoteId.getSelectedItem().toString());
         bz.setSigNoiseRatio1("" + constant.getSigNoiseLocal());
         bz.setSignoiseRatio2("" + constant.getSigNoiseRemote());
