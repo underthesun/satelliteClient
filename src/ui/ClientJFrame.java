@@ -14,6 +14,7 @@ import communication.Communication;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import utils.Business;
@@ -31,6 +32,7 @@ public class ClientJFrame extends javax.swing.JFrame {
     Constants constant;
     private BusinessStatusTableModel bstm;
     private Communication comm;
+    private ArrayList<Business> bizUndetermined;
 
     /**
      * Creates new form ClientJFrame
@@ -39,6 +41,7 @@ public class ClientJFrame extends javax.swing.JFrame {
         initComponents();
         loadConf();
 
+        bizUndetermined = new ArrayList<Business>();
         bstm = new BusinessStatusTableModel();
         busiTable.setModel(bstm);
         setRemoteStationID();
@@ -425,12 +428,16 @@ public class ClientJFrame extends javax.swing.JFrame {
         bstm.addRecord(bz);
 
         String request = "request:";
-        String idCalled = cbRemoteId.getSelectedItem().toString();
-        String biz = "话音" + tfVoipNum.getText() + "路&视频" + cbVideo.getSelectedItem().toString();
+//        String idCalled = cbRemoteId.getSelectedItem().toString();
+//        String biz = "话音" + tfVoipNum.getText() + "路&视频" + cbVideo.getSelectedItem().toString();
 //        String bd = tfBandWidth.getText();
-        request += constant.getId() + ":" + idCalled + ":" + biz + ":" + bandWidth + ":" + bz.getSerial();
+//        request += constant.getId() + ":" + idCalled + ":" + biz + ":" + bandWidth + ":" + bz.getSerial();
 //        System.out.println("query: " + request);
 //        System.out.println(cbVideo.getSelectedItem().toString());
+        request += bz.getStationIDCalling() + ":" + bz.getStationIDCalled() + ":" + bz.getBandwidth() + ":" + bz.getVoIPNum()
+                + ":" + bz.getVoIPNum() + ":" + bz.getFaxNum() + ":" + bz.getInterBandwidth() + ":" + bz.getAntennaCaliber()
+                + ":" + bz.getAmplifier()+":"+bz.getSerial();
+        bizUndetermined.add(bz);
         comm.sendRequest(request);
 
     }//GEN-LAST:event_busi_submitActionPerformed
@@ -606,8 +613,8 @@ public class ClientJFrame extends javax.swing.JFrame {
 //        }
 //        bstm.setRunningStatus(s, status);
 //    }
-     public void processBizEcho(String s) {
-         String[] strs = s.split(":");
+    public void processBizEcho(String s) {
+        String[] strs = s.split(":");
         int type = Integer.parseInt(strs[0]);
         int serial = Integer.parseInt(strs[1]);
         String status = null;
@@ -615,7 +622,7 @@ public class ClientJFrame extends javax.swing.JFrame {
             case 0:
                 status = "已批准";
                 String fp = strs[2];
-                String cf = "F7:03:"+fp+":"+bstm.getBandwidth(serial)+":"+"35"+":"+"00";
+                String cf = "F7:03:" + fp + ":" + bstm.getBandwidth(serial) + ":" + "35" + ":" + "00";
                 System.out.println(cf);
                 comm.sendBizBoardQuery(cf);
                 break;
@@ -631,8 +638,12 @@ public class ClientJFrame extends javax.swing.JFrame {
         }
         bstm.setRunningStatus(serial, status);
     }
-     
-     public void updateSNR(int snr){
-         bstm.updateSNR(""+snr);
-     }
+
+    public void updateSNR(int snr) {
+        bstm.updateSNR("" + snr);
+    }
+
+    public ArrayList<Business> getBizUndetermined() {
+        return this.bizUndetermined;
+    }
 }
