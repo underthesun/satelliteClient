@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<root>
+    <id>2</id><!--本站点ID-->
+    <remoteIP>127.0.0.1</remoteIP><!--远端站点IP-->
+    <remotePort>6666</remotePort><!--远端端口-->
+    <localPort>6668</localPort><!--本地端口-->
+    <businessBoardIP>127.0.0.01</businessBoardIP><!--业务板卡IP-->
+    <businessBoardPort>7777</businessBoardPort><!--业务板卡端口-->
+    <bdVoIP>64</bdVoIP>
+    <bdFax>64</bdFax>
+    <bdVideoNormal>1500</bdVideoNormal>
+    <bdVideoHD>4000</bdVideoHD>
+    <siteNum>12</siteNum><!--站点个数-->
+</root>
