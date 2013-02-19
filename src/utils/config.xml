@@ -6,7 +6,7 @@ and open the template in the editor.
 
 
 <root>
-    <id>6</id><!--本站点ID-->
+    <id>1</id><!--本站点ID-->
     <remoteIP>127.0.0.1</remoteIP><!--远端站点IP-->
     <remotePort>6666</remotePort><!--远端端口-->
     <localPort>6668</localPort><!--本地端口-->
