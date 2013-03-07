@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.table.AbstractTableModel;
+import ui.ClientJFrame;
 
 /**
  *
@@ -15,10 +16,12 @@ import javax.swing.table.AbstractTableModel;
  */
 public class BusinessStatusTableModel extends AbstractTableModel {
 
-    public ArrayList<Business> busilist;
+    private ClientJFrame clientFrame;
+    private ArrayList<Business> busilist;
     private String columnNames[] = {"主叫", "被叫", "带宽", "信道1", "信道2", "入网状况", "VoIP路数", "视频业务", "传真路数", "互联网带宽", "天线口径", "功放大小", "更新时间", "运行状况"};
 
-    public BusinessStatusTableModel() {
+    public BusinessStatusTableModel(ClientJFrame clientFrame) {
+        this.clientFrame = clientFrame;
         busilist = new ArrayList<Business>();
 //        loadTestData();
     }
@@ -28,6 +31,18 @@ public class BusinessStatusTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    public String isCaller(){
+        String flag = "02";
+        for(Business b : busilist){
+            if(b.getAppStatus().equals("正在申请")||b.getAppStatus().equals("已批准")){
+                if(b.getStationIDCalling().equals(clientFrame.getConstants().getId())){
+                    flag = "01";
+                }
+            }
+        }
+        return flag;
+    }
+    
     public String getBandwidth() {
         String result = null;
         for (Business b : busilist) {
@@ -145,23 +160,52 @@ public class BusinessStatusTableModel extends AbstractTableModel {
     }
 
     public void statusChanged() {
-        this.fireTableStructureChanged();
+        this.fireTableDataChanged();
     }
 
     public void updateSNR(String snr) {
         for (Business b : busilist) {
-            b.setSigNoiseRatio1(snr);
+            if (b.getStationIDCalling().equals(clientFrame.getConstants().getId())) {
+                if (b.getAppStatus().equals("已批准") || b.getAppStatus().equals("已警告")) {
+                    b.setSigNoiseRatio1(snr);
+                }
+            } else if (b.getStationIDCalled().equals(clientFrame.getConstants().getId())) {
+                if (b.getAppStatus().equals("已批准") || b.getAppStatus().equals("已警告")) {
+                    b.setSigNoiseRatio2(snr);
+                }
+            }
         }
         fireTableDataChanged();
     }
 
-    public void updateSNR(String site, String snr2) {
+    public void updateSNR(String id, String snr) {
         for (Business b : busilist) {
-            if (b.getStationIDCalled().equals(site) && b.getAppStatus().equals("已批准")) {
-                b.setSignoiseRatio2(snr2);
+            if (b.getStationIDCalled().equals(id)) {
+                if (b.getAppStatus().equals("已批准") || b.getAppStatus().equals("已警告")) {
+                    b.setSigNoiseRatio2(snr);
+                }
+            } else if (b.getStationIDCalling().equals(id)) {
+                if (b.getAppStatus().equals("已批准") || b.getAppStatus().equals("已警告")) {
+                    b.setSigNoiseRatio1(snr);
+                }
             }
         }
         fireTableDataChanged();
+    }
+    
+    public String getSNRQueryingId(){
+        String id= "";
+        for (Business b : busilist) {
+            String s = b.getAppStatus();
+            if (s.equals("已批准") || s.equals("已警告") ) {
+                if(b.getStationIDCalling().equals(clientFrame.getConstants().getId())){
+                    id = b.getStationIDCalled();
+                }else{
+                    id = b.getStationIDCalling();
+                }
+            }
+        }
+        return id;
     }
 
     public ArrayList<String> getPermitted() {
@@ -173,11 +217,11 @@ public class BusinessStatusTableModel extends AbstractTableModel {
         }
         return plist;
     }
-    
-    public void bizReset(){
+
+    public void bizReset() {
         for (Business b : busilist) {
-            String s =b.getAppStatus();
-            if (s.equals("已批准")||s.equals("已警告")||s.equals("正在申请")) {
+            String s = b.getAppStatus();
+            if (s.equals("已批准") || s.equals("已警告") || s.equals("正在申请")) {
                 b.setAppStatus("已拆除");
             }
         }

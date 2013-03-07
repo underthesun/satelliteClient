@@ -33,8 +33,13 @@ public class Configuarator {
             Logger.getLogger(Configuarator.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
+            File conf = new File("conf/config.xml");
+            if (!conf.exists()) {
+                conf = new File("src/utils/config.xml");
+            }
+            doc = docBuilder.parse(conf);
 //            doc = docBuilder.parse(new File("src/utils/config.xml"));
-            doc = docBuilder.parse(new File("conf/config.xml"));
+//            doc = docBuilder.parse(new File("conf/config.xml"));
         } catch (SAXException ex) {
             Logger.getLogger(Configuarator.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -57,16 +62,6 @@ public class Configuarator {
         NodeList nl = doc.getElementsByTagName("remotePort");
         return nl.item(0).getFirstChild().getNodeValue();
     }
-//
-//    public String getRemoteLoginPort() {
-//        NodeList nl = doc.getElementsByTagName("remoteLoginPort");
-//        return nl.item(0).getFirstChild().getNodeValue();
-//    }
-//
-//    public String getRemoteMessagePort() {
-//        NodeList nl = doc.getElementsByTagName("remoteMessagePort");
-//        return nl.item(0).getFirstChild().getNodeValue();
-//    }
 
     public String getLocalPort() {
         NodeList nl = doc.getElementsByTagName("localPort");
@@ -105,6 +100,16 @@ public class Configuarator {
 
     public String getSiteNum() {
         NodeList nl = doc.getElementsByTagName("siteNum");
+        return nl.item(0).getFirstChild().getNodeValue();
+    }
+
+    public String getFpReportSNR() {
+        NodeList nl = doc.getElementsByTagName("fpReportSNR");
+        return nl.item(0).getFirstChild().getNodeValue();
+    }
+    
+    public String getFpQuerySNR() {
+        NodeList nl = doc.getElementsByTagName("fpQuerySNR");
         return nl.item(0).getFirstChild().getNodeValue();
     }
 //    public void getEmployee(){

@@ -16,5 +16,7 @@ and open the template in the editor.
     <bdFax>64</bdFax>
     <bdVideoNormal>1500</bdVideoNormal>
     <bdVideoHD>4000</bdVideoHD>
+    <fpQuerySNR>3</fpQuerySNR><!--每3秒查询板卡、中心站一次SNR-->
+    <fpReportSNR>3</fpReportSNR><!--每3秒上报一次SNR-->
     <siteNum>12</siteNum><!--站点个数-->
 </root>

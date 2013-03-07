@@ -17,6 +17,20 @@ public class Constants {
     private static String id;
     private static String remoteIP;
     private static int remotePort;
+    private static int remoteLoginPort;
+    private static int remoteMessagePort;
+    private static int localPort;
+    private static String bizBoardIP;
+    private static int bizBoardPort;
+    private String sigNoiseLocal = "";
+    private String sigNoiseRemote = "";
+    private static int siteNum;
+    private static int fpReportSNR;
+    private static int fpQuerySNR;
+
+    public Constants() {
+    }
+    
 
     public static int getRemotePort() {
         return remotePort;
@@ -24,17 +38,6 @@ public class Constants {
 
     public static void setRemotePort(int remotePort) {
         Constants.remotePort = remotePort;
-    }
-    private static int remoteLoginPort;
-    private static int remoteMessagePort;
-    private static int localPort;
-    private static String bizBoardIP;
-    private static int bizBoardPort;
-    private int sigNoiseLocal = 0;
-    private int sigNoiseRemote = 0;
-    private static int siteNum;
-
-    public Constants() {
     }
 
     public static String getRemoteIP() {
@@ -125,19 +128,19 @@ public class Constants {
         id = aId;
     }
 
-    public int getSigNoiseLocal() {
+    public String getSigNoiseLocal() {
         return sigNoiseLocal;
     }
 
-    public void setSigNoiseLocal(int sigNoiseLocal) {
+    public void setSigNoiseLocal(String sigNoiseLocal) {
         this.sigNoiseLocal = sigNoiseLocal;
     }
 
-    public int getSigNoiseRemote() {
+    public String getSigNoiseRemote() {
         return sigNoiseRemote;
     }
 
-    public void setSigNoiseRemote(int sigNoiseRemote) {
+    public void setSigNoiseRemote(String sigNoiseRemote) {
         this.sigNoiseRemote = sigNoiseRemote;
     }
 
@@ -148,4 +151,21 @@ public class Constants {
     public static void setSiteNum(int siteNum) {
         Constants.siteNum = siteNum;
     }
+
+    public static int getFpReportSNR() {
+        return fpReportSNR;
+    }
+
+    public static void setFpReportSNR(int fpReportSNR) {
+        Constants.fpReportSNR = fpReportSNR;
+    }
+
+    public static int getFpQuerySNR() {
+        return fpQuerySNR;
+    }
+
+    public static void setFpQuerySNR(int fpQuerySNR) {
+        Constants.fpQuerySNR = fpQuerySNR;
+    }
+    
 }

@@ -37,11 +37,11 @@ public class Communication {
     private DatagramSocket clientSocket = null;
     private ClientJFrame clientFrame;
     private KeepConnection keepConnection;
-    private BizBoardQuery bizBoardQuery;
-    
+    private SNRQuery snrQuery;
+    private SNRReport snrReport;
+
 //    private static int count = 0;
 //    private static int countConfirmed = -1;
-
     public Communication(ClientJFrame c) {
         clientFrame = c;
         loadConstants();
@@ -55,12 +55,13 @@ public class Communication {
                 clientPort++;
             }
         }
-
         keepConnection = new KeepConnection(this, clientId);
-        bizBoardQuery = new BizBoardQuery(this);
+        snrQuery = new SNRQuery(this);
+        snrReport = new SNRReport(this);
         Timer t = new Timer();
         t.schedule(keepConnection, 0, 3000);
-        t.schedule(bizBoardQuery, 0, 2000);
+        t.schedule(snrQuery, 0, 1000 * constant.getFpQuerySNR());
+        t.schedule(snrReport, 0, 1000 * constant.getFpReportSNR());
         new Thread(new MessageServer(clientSocket, this)).start();
     }
 
@@ -69,11 +70,10 @@ public class Communication {
         serverIp = constant.getRemoteIP();
         serverPort = constant.getRemotePort();
         clientId = constant.getId();
-        serverLoginPort = constant.getRemoteLoginPort();
-        serverMessagePort = constant.getRemoteMessagePort();
+//        serverLoginPort = constant.getRemoteLoginPort();
+//        serverMessagePort = constant.getRemoteMessagePort();
         bizBoardIP = constant.getBizBoardIP();
         bizBoardPort = constant.getBizBoardPort();
-        clientId = constant.getId();
         clientPort = constant.getLocalPort();
     }
 
@@ -101,17 +101,31 @@ public class Communication {
     public void sendMessage(String str) {
         sendPacket(str, serverIp, serverPort);
     }
-    
-    public ArrayList<String> getPermittedSites(){
-        return null;
-    }
 
-    public void sendBizBoardQuery(String str) {
-//        System.out.println("Biz:"+str);
+    public void sendBizBoardQuery() {
+        String str = "F7:01";
         sendPacket(str, bizBoardIP, bizBoardPort);
     }
-    
-    public void sendSNRQuery(String snr){}
+
+    public void sendBizBoardConf(String str) {
+        sendPacket(str, bizBoardIP, bizBoardPort);
+    }
+
+    public void sendSNRQuery() {
+        String id = clientFrame.getSNRQueryingId();
+        if (!id.equals("")) {
+            String str = "snr:" + clientId + ":1:" + id;
+            sendPacket(str, serverIp, serverPort);
+            System.out.println("send-->" + str);
+        }
+    }
+
+    public void reportSNR() {
+        if (!constant.getSigNoiseLocal().equals("")) {
+            String str = "snr:" + clientId + ":0:" + constant.getSigNoiseLocal();
+            sendPacket(str, serverIp, serverPort);
+        }
+    }
 
     public void sendPacket(String str, String ip, int port) {
 //        byte[] data = str.getBytes();
@@ -143,24 +157,21 @@ public class Communication {
             int c = Integer.parseInt(str);
             keepConnection.setConfirmedCount(c);
         } else if (command.equals("request")) {
-           // System.out.println(data);
+            // System.out.println(data);
             String[] strs = str.split(":");
-            
-            String id ="";
+
+            String id = "";
             //String idCalled = "";
             String type = strs[1];
 //            String serial = strs[2];
             //String s = str.substring(str.indexOf(":") + 1);
 //            System.out.println("mb,running here");
-            if(type.equals("5"))
-            {
+            if (type.equals("5")) {
                 id = strs[2];
-            }
-            else
-            {
+            } else {
                 id = strs[0];
             }
-                           
+
             if (id.equals(constant.getId())) {
                 //System.out.println("id: " + id);
                 //System.out.println(str);
@@ -169,12 +180,18 @@ public class Communication {
             }
         } else if (command.equals("message")) {
             clientFrame.appendMessage(str);
+        } else if (command.equals("snr")) {
+            String[] strs = str.split(":");
+            String idQuerying = strs[0];
+            String idQueryed = strs[1];
+            String snr = strs[2];
+            if (idQuerying.equals(constant.getId())) {
+                clientFrame.updateSNR(idQueryed, snr);
+            }
         } else if (command.equals("F7")) {
             String[] strs = str.split(":");
-            if (strs[0].equals("03")) {
-                sendBizBoardQuery(data);
-            } else if (strs[0].equals("01")) {
-                int snr = Integer.parseInt(strs[1]);
+            if (strs[0].equals("01")) {
+                String snr = strs[1];
                 constant.setSigNoiseLocal(snr);
                 clientFrame.updateSNR(snr);
             }

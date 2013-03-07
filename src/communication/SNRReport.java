@@ -5,26 +5,22 @@
 
 package communication;
 
+import java.util.ArrayList;
 import java.util.TimerTask;
 
 /**
  * 
  * @author shuai
  */
-public class BizBoardQuery extends TimerTask{
+public class SNRReport extends TimerTask{
     private Communication comm;
     
-    public BizBoardQuery(Communication comm){
+    public SNRReport(Communication comm){
         this.comm = comm;
     }
-    
+
     @Override
     public void run() {
-        String query = "F7:01";
-        comm.sendBizBoardQuery(query);
+        comm.reportSNR();
     }
-//    public void BizBoardConf(String fp, String bd, String po, String ca){
-//        comm.sendBizBoardQuery(ca);
-//    }
-
 }

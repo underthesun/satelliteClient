@@ -80,7 +80,7 @@ public class Business {
         this.signal_noise_ratio1 = signal_ratio1;
     }
 
-    public void setSignoiseRatio2(String signal_ratio2) {
+    public void setSigNoiseRatio2(String signal_ratio2) {
         this.signal_noise_ratio2 = signal_ratio2;
     }
 

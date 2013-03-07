@@ -45,7 +45,7 @@ public class ClientJFrame extends javax.swing.JFrame {
         loadConf();
 
         bizUndetermined = new ArrayList<Business>();
-        bstm = new BusinessStatusTableModel();
+        bstm = new BusinessStatusTableModel(this);
         busiTable.setModel(bstm);
         addTableListener();
         setRemoteStationID();
@@ -84,8 +84,6 @@ public class ClientJFrame extends javax.swing.JFrame {
         constant.setLocalPort(Integer.parseInt(conf.getLocalPort()));
         constant.setRemoteIP(conf.getRemoteIP());
         constant.setRemotePort(Integer.parseInt(conf.getRemotePort()));
-//        constant.setRemoteLoginPort(Integer.parseInt(conf.getRemoteLoginPort()));
-//        constant.setRemoteMessagePort(Integer.parseInt(conf.getRemoteMessagePort()));
         constant.setBizBoardPort(Integer.parseInt(conf.getBusinessBoardPort()));
         constant.setBizBoardIP(conf.getBusinessBoardIP());
         constant.setBdFax(Integer.parseInt(conf.getBdFax()));
@@ -93,11 +91,8 @@ public class ClientJFrame extends javax.swing.JFrame {
         constant.setBdVideoNormal(Integer.parseInt(conf.getBdVideoNormal()));
         constant.setBdVoIP(Integer.parseInt(conf.getBdVoIP()));
         constant.setSiteNum(Integer.parseInt(conf.getSiteNum()));
-//        System.out.println(constant.getRemoteIP());
-//        System.out.println(constant.getRemoteLoginPort());
-//        System.out.println(constant.getRemoteMessagePort());
-//        System.out.println(constant.getBizBoardIP());
-//        System.out.println(constant.getBizBoardPort());
+        constant.setFpQuerySNR(Integer.parseInt(conf.getFpQuerySNR()));
+        constant.setFpReportSNR(Integer.parseInt(conf.getFpReportSNR()));
     }
 
     /**
@@ -419,7 +414,7 @@ public class ClientJFrame extends javax.swing.JFrame {
             bz.setStationIDCalling(constant.getId());
             bz.setStationIDCalled(idCalled);
             bz.setSigNoiseRatio1("" + constant.getSigNoiseLocal());
-            bz.setSignoiseRatio2("" + constant.getSigNoiseRemote());
+            bz.setSigNoiseRatio2("" + constant.getSigNoiseRemote());
             bz.setRuningStatus("入网");
 
             int voipNum = Integer.parseInt(tfVoipNum.getText());
@@ -653,13 +648,14 @@ public class ClientJFrame extends javax.swing.JFrame {
                 status = "已批准";
                 busi_submit.setEnabled(false);
                 String fp = strs[2];
-                String cf = "F7:03:" + fp + ":" + bstm.getBandwidth() + ":" + "35" + ":" + "00";
+                String cf = "F7:03:" + fp + ":" + bstm.getBandwidth() + ":35:00" + bstm.isCaller();
 //                System.out.println(cf);
-                comm.sendBizBoardQuery(cf);
+                comm.sendBizBoardConf(cf);
                 break;
             case 1:
                 status = "已驳回";
                 busi_submit.setEnabled(true);
+                constant.setSigNoiseLocal("");
                 break;
             case 2:
                 status = "已警告";
@@ -667,22 +663,25 @@ public class ClientJFrame extends javax.swing.JFrame {
             case 3:
                 status = "已拆除";
                 busi_submit.setEnabled(true);
+                constant.setSigNoiseLocal("");
                 break;
             case 4:
                 status = "对方繁忙或不在线";
                 busi_submit.setEnabled(true);
+                constant.setSigNoiseLocal("");
                 break;
             case 5:
                 status = "正在申请";
                 busi_submit.setEnabled(false);
+                constant.setSigNoiseLocal("");
                 //System.out.println("pc"+status+"case:"+type);
 
                 //Business bz = new Business(strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0],strs[0]);
                 Business bz = new Business();
                 bz.setStationIDCalling(strs[0]);
                 bz.setStationIDCalled(strs[2]);
-                bz.setSigNoiseRatio1("0");
-                bz.setSignoiseRatio2("0");
+                bz.setSigNoiseRatio1("");
+                bz.setSigNoiseRatio2("");
                 bz.setRuningStatus("入网");
                 bz.setBandwidth(strs[3]);
                 bz.setVoIPNum(strs[4]);
@@ -698,15 +697,24 @@ public class ClientJFrame extends javax.swing.JFrame {
             case 6:
                 status = "已取消";
                 busi_submit.setEnabled(true);
+                constant.setSigNoiseLocal("");
                 break;
         }
         bstm.setRunningStatus(status);
     }
 
-    public void updateSNR(int snr) {
-        bstm.updateSNR("" + snr);
+    public void updateSNR(String id, String snr) {
+        bstm.updateSNR(id, snr);
     }
 
+    public void updateSNR(String snr) {
+        bstm.updateSNR(snr);
+    }
+
+    public String getSNRQueryingId(){
+        return bstm.getSNRQueryingId();
+    }
+    
     public ArrayList<Business> getBizUndetermined() {
         return this.bizUndetermined;
     }
