@@ -648,7 +648,7 @@ public class ClientJFrame extends javax.swing.JFrame {
                 status = "已批准";
                 busi_submit.setEnabled(false);
                 String fp = strs[2];
-                String cf = "F7:03:" + fp + ":" + bstm.getBandwidth() + ":35:00" + bstm.isCaller();
+                String cf = "F7:03:" + fp + ":" + bstm.getBandwidth() + ":35:00:" + bstm.isCaller();
 //                System.out.println(cf);
                 comm.sendBizBoardConf(cf);
                 break;

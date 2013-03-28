@@ -16,7 +16,6 @@ public class KeepConnection extends TimerTask {
     private String clientId;
     private static int count = 0;
     private static int countConfirmed = -1;
-    private static int serverLoginPort = 6666;
 
     public KeepConnection(Communication c, String id) {
         comm = c;
